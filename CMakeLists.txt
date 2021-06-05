@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.9)
 project(game)
 
 # Add your sources here (adding headers is optional, but helps some CMake generators)
-set(PROJECT_SOURCE game.cpp game.hpp)
+set(PROJECT_SOURCE game.cpp game.hpp mazegen/Cell.h mazegen/Direction.h)
 
 # ... and any other files you want in the release here
 set(PROJECT_DISTRIBS LICENSE README.md)
@@ -17,7 +17,7 @@ else()
   add_compile_options("-Wall" "-Wextra" "-Wdouble-promotion" "-Wno-unused-parameter")
 endif()
 
-find_package (32BLIT CONFIG REQUIRED PATHS ../32blit-sdk)
+find_package (32BLIT CONFIG REQUIRED PATHS ../../32blit-beta)
 
 blit_executable (${PROJECT_NAME} ${PROJECT_SOURCE})
 blit_assets_yaml (${PROJECT_NAME} assets.yml)

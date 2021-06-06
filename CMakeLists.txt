@@ -5,8 +5,24 @@ cmake_minimum_required(VERSION 3.9)
 project(game)
 
 # Add your sources here (adding headers is optional, but helps some CMake generators)
-set(PROJECT_SOURCE game.cpp game.hpp mazegen/Cell.h mazegen/Cell.cpp mazegen/Direction.h mazegen/Direction.cpp
-        mazegen/Maze.h mazegen/Maze.cpp mazegen/MazeGen.h mazegen/MazeGen.cpp)
+set(PROJECT_SOURCE
+        game.cpp
+        game.hpp
+        mazegen/Cell.h
+        mazegen/Cell.cpp
+        mazegen/Direction.h
+        mazegen/Direction.cpp
+        mazegen/Maze.h
+        mazegen/Maze.cpp
+        mazegen/MazeGen.h
+        mazegen/MazeGen.cpp
+        gamemap/Tile.h
+        gamemap/Tile.cpp
+        gamemap/GameMap.cpp
+        gamemap/GameMap.h
+        entities/Player.h
+        entities/Player.cpp
+)
 
 # ... and any other files you want in the release here
 set(PROJECT_DISTRIBS LICENSE README.md)

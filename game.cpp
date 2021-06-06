@@ -1,11 +1,26 @@
 #include "game.hpp"
 #include "mazegen/Maze.h"
 #include "mazegen/MazeGen.h"
+#include "gamemap/GameMap.h"
+#include "entities/Player.h"
+#include <types/rect.hpp>
 
 using namespace blit;
-const int TILE_SIZE = 16;
 
-Maze maze = binary_tree(20, 15);
+Player buildPlayer(GameMap *gameMap) {
+    Tile *tile = gameMap->tile_at(1, 1);
+    int x = tile->bounds()->center().x;
+    int y = tile->bounds()->center().y;
+    return Player(x, y, 5);
+}
+
+GameMap buildMap() {
+    Maze maze = binary_tree(20, 15);
+    return GameMap::from_maze(&maze, 32, 32);
+}
+
+GameMap map = buildMap();
+Player player = buildPlayer(&map);
 
 void init() {
     set_screen_mode(ScreenMode::hires);
@@ -17,41 +32,40 @@ void render(uint32_t time) {
     screen.alpha = 255;
     screen.mask = nullptr;
 
-    for (int y = 0; y < maze.height(); y++) {
-        for (int x = 0; x < maze.width(); x++) {
-            Cell *cell = maze.cell_at(x, y);
-            screen.pen = Pen(0, 255, 0);
-            if (!cell->open(Direction::NORTH)) {
-                screen.line(
-                        Point(x * TILE_SIZE, y * TILE_SIZE),
-                        Point(x * TILE_SIZE + TILE_SIZE, y * TILE_SIZE)
-                );
+    // Render Map
+    for (int y = 0; y < map.height(); y++) {
+        for (int x = 0; x < map.width(); x++) {
+            Tile *tile = map.tile_at(x, y);
+            if (tile->collides()) {
+                screen.pen = Pen(0, 255, 0);
+            } else {
+                screen.pen = Pen(0, 0, 0);
             }
-
-            if (!cell->open(Direction::EAST)) {
-                screen.line(
-                        Point(x * TILE_SIZE + TILE_SIZE - 1, y * TILE_SIZE),
-                        Point(x * TILE_SIZE + TILE_SIZE - 1, y * TILE_SIZE + TILE_SIZE)
-                );
-            }
-
-            if (!cell->open(Direction::SOUTH)) {
-                screen.line(
-                        Point(x * TILE_SIZE, y * TILE_SIZE + TILE_SIZE - 1),
-                        Point(x * TILE_SIZE + TILE_SIZE, y * TILE_SIZE + TILE_SIZE - 1)
-                );
-            }
-
-            if (!cell->open(Direction::WEST)) {
-                screen.line(
-                        Point(x * TILE_SIZE, y * TILE_SIZE),
-                        Point(x * TILE_SIZE, y * TILE_SIZE + TILE_SIZE)
-                );
-            }
-
+            screen.rectangle(*tile->bounds());
         }
     }
+
+    // Render Player
+    screen.pen = Pen(255, 0, 0);
+    screen.rectangle(player.bounds());
 }
 
 void update(uint32_t time) {
+    blit::Rect next = blit::Rect(player.bounds().tl(), player.bounds().br());
+    if (pressed(DPAD_RIGHT)) {
+        next.x++;
+    }
+    if (pressed(DPAD_LEFT)) {
+        next.x--;
+    }
+    if (pressed(DPAD_UP)) {
+        next.y--;
+    }
+    if (pressed(DPAD_DOWN)) {
+        next.y++;
+    }
+
+    if (!map.collides(next)) {
+        player.move(next.x, next.y);
+    }
 }

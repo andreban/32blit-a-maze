@@ -4,8 +4,8 @@ cmake_minimum_required(VERSION 3.9)
 project(amaze)
 
 set(PROJECT_SOURCE
-        game.cpp
-        game.hpp
+        amaze.cpp
+        amaze.hpp
         mazegen/Cell.h
         mazegen/Cell.cpp
         mazegen/Direction.h

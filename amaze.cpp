@@ -3,6 +3,7 @@
 #include "mazegen/MazeGen.h"
 #include "gamemap/GameMap.h"
 #include "entities/Player.h"
+#include "entities/Viewport.h"
 
 using namespace blit;
 
@@ -10,7 +11,7 @@ Player buildPlayer(GameMap *gameMap) {
     Tile *tile = gameMap->tile_at(1, 1);
     int x = tile->bounds()->center().x;
     int y = tile->bounds()->center().y;
-    return Player(x, y, 5);
+    return Player(x, y, 8);
 }
 
 GameMap buildMap() {
@@ -20,9 +21,11 @@ GameMap buildMap() {
 
 GameMap map = buildMap();
 Player player = buildPlayer(&map);
+Viewport viewport = Viewport(screen.bounds, map.pixelSize());
 
 void init() {
     set_screen_mode(ScreenMode::hires);
+    viewport = Viewport(screen.bounds, map.pixelSize());
 }
 
 void render(uint32_t time) {
@@ -30,6 +33,8 @@ void render(uint32_t time) {
     screen.clear();
     screen.alpha = 255;
     screen.mask = nullptr;
+
+    viewport.update(player.bounds().center());
 
     // Render Map
     for (int y = 0; y < map.height(); y++) {
@@ -40,13 +45,13 @@ void render(uint32_t time) {
             } else {
                 screen.pen = Pen(0, 0, 0);
             }
-            screen.rectangle(*tile->bounds());
+            screen.rectangle(viewport.translate(*tile->bounds()));
         }
     }
 
     // Render Player
     screen.pen = Pen(255, 0, 0);
-    screen.rectangle(player.bounds());
+    screen.rectangle(viewport.translate(player.bounds()));
 }
 
 void update(uint32_t time) {

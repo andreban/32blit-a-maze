@@ -20,6 +20,8 @@ set(PROJECT_SOURCE
         gamemap/GameMap.h
         entities/Player.h
         entities/Player.cpp
+        entities/Viewport.h
+        entities/Viewport.cpp
 )
 
 # ... and any other files you want in the release here

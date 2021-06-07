@@ -6,9 +6,10 @@
 
 GameMap::GameMap(int32_t width, int32_t height, int32_t tile_size, int32_t wall_size): width_(width), height_(height) {
     int32_t tile_start_y = 0;
+    int32_t tile_start_x = 0;
     for (int y = 0; y < height; y++) {
         int32_t tile_height = (y & 1) == 0 ? wall_size : tile_size;
-        int32_t tile_start_x = 0;
+        tile_start_x = 0;
         for (int x = 0; x < width; x++) {
             int32_t tile_width = (x & 1) == 0 ? wall_size : tile_size;
             bool collides = !((x & 1) == 1 && (y & 1) == 1);
@@ -19,6 +20,7 @@ GameMap::GameMap(int32_t width, int32_t height, int32_t tile_size, int32_t wall_
         }
         tile_start_y += tile_height;
     }
+    pixel_size_ = blit::Size(tile_start_x, tile_start_y);
 }
 
 GameMap GameMap::from_maze(Maze *maze, int32_t tile_size, int32_t wall_size) {
@@ -69,4 +71,8 @@ bool GameMap::collides(blit::Rect obj) {
         }
     }
     return false;
+}
+
+blit::Size GameMap::pixelSize() {
+    return pixel_size_;
 }

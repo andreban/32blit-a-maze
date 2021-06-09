@@ -4,7 +4,8 @@
 
 #include "GameMap.h"
 
-GameMap::GameMap(int32_t width, int32_t height, int32_t tile_size, int32_t wall_size): width_(width), height_(height) {
+GameMap::GameMap(int32_t width, int32_t height, int32_t tile_size, int32_t wall_size, blit::Point exit):
+        width_(width), height_(height), exit_(exit) {
     int32_t tile_start_y = 0;
     int32_t tile_start_x = 0;
     for (int y = 0; y < height; y++) {
@@ -23,10 +24,10 @@ GameMap::GameMap(int32_t width, int32_t height, int32_t tile_size, int32_t wall_
     pixel_size_ = blit::Size(tile_start_x, tile_start_y);
 }
 
-GameMap GameMap::from_maze(Maze *maze, int32_t tile_size, int32_t wall_size) {
+GameMap GameMap::from_maze(Maze *maze, int32_t tile_size, int32_t wall_size, blit::Point exit) {
     int32_t map_width = maze->width() * 2 + 1;
     int32_t map_height = maze->height() * 2 + 1;
-    GameMap gameMap = GameMap(map_width, map_height, tile_size, wall_size);
+    GameMap gameMap = GameMap(map_width, map_height, tile_size, wall_size, exit);
     for (int y = 0; y < maze->height(); y++) {
         for (int x  = 0; x < maze->width(); x++) {
             Cell *cell = maze->cell_at(x, y);
@@ -75,4 +76,8 @@ bool GameMap::collides(blit::Rect obj) {
 
 blit::Size GameMap::pixelSize() {
     return pixel_size_;
+}
+
+blit::Point GameMap::exit() {
+    return exit_;
 }

@@ -12,3 +12,27 @@ Direction opposite(Direction direction) {
     }
 }
 
+int32_t vector_x(Direction direction) {
+    switch (direction) {
+        case NORTH:
+        case SOUTH:
+            return 0;
+        case EAST:
+            return 1;
+        case WEST:
+            return -1;
+    }
+}
+
+int32_t vector_y(Direction direction) {
+    switch (direction) {
+        case EAST:
+        case WEST:
+            return 0;
+        case SOUTH:
+            return 1;
+        case NORTH:
+            return -1;
+    }
+}
+

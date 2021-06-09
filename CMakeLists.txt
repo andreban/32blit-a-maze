@@ -10,6 +10,8 @@ set(PROJECT_SOURCE
         mazegen/Cell.cpp
         mazegen/Direction.h
         mazegen/Direction.cpp
+        mazegen/Distances.h
+        mazegen/Distances.cpp
         mazegen/Maze.h
         mazegen/Maze.cpp
         mazegen/MazeGen.h
@@ -22,6 +24,12 @@ set(PROJECT_SOURCE
         entities/Player.cpp
         entities/Viewport.h
         entities/Viewport.cpp
+        states/Game.h
+        states/Game.cpp
+        states/MainMenu.h
+        states/MainMenu.cpp
+        states/GameOver.h
+        states/GameOver.cpp
 )
 
 # ... and any other files you want in the release here

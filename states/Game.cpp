@@ -67,7 +67,6 @@ Game* Game::newGame() {
     int32_t start_cell_y = rand() % maze.height();
     Distances distances = Distances::calculate_distances(&maze, Point(start_cell_x, start_cell_y));
     Point exit = Point(distances.maxPoint().x * 2 + 1, distances.maxPoint().y * 2 + 1);
-    printf("%d/%d", exit.x, exit.y);
 
     GameMap map = GameMap::from_maze(&maze, 32, 32, exit);
 

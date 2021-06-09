@@ -8,9 +8,13 @@
 #include <cstdint>
 
 class MainMenu {
+private:
+    bool newGame_ = false;
 public:
     void update(uint32_t time);
     void render(uint32_t time);
+    void reset();
+    bool newGame();
 };
 
 #endif //AMAZE_MAINMENU_H

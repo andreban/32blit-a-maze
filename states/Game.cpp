@@ -30,6 +30,10 @@ void Game::update(uint32_t time) {
 
     if (!map.collides(next)) {
         player.move(next.x, next.y);
+        Tile *exitTile = map.tile_at(map.exit().x, map.exit().y);
+        if (player.bounds().intersects(*exitTile->bounds())){
+            victory_ = true;
+        }
     }
 }
 

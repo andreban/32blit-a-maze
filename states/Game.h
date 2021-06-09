@@ -15,11 +15,20 @@ private:
     GameMap map;
     Player player;
     Viewport viewport;
+    bool victory_ = false;
+    bool gameOver_ = false;
 public:
     Game(GameMap map, Player player, Viewport viewport);
     void update(uint32_t time);
     void render(uint32_t time);
     static Game* newGame();
+    bool victory() {
+        return victory_;
+    }
+
+    bool gameOver() {
+        return gameOver_;
+    }
 };
 
 

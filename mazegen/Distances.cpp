@@ -20,7 +20,7 @@ int32_t Distances::height() {
 }
 
 int32_t Distances::max() {
-    int max_distance = 0;
+    int32_t max_distance = 0;
     for (int y = 0; y < height(); y++) {
         for (int x = 0; x < width(); x++) {
             max_distance = std::max(max_distance, distanceAt(x, y));

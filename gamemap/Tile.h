@@ -8,10 +8,10 @@
 #include <types/rect.hpp>
 
 enum TileType {
-    WALL,
-    FLOOR,
-    FLOODING,
-    FLOODED,
+    WALL = 1,
+    FLOOR = 2,
+    FLOODING = 3,
+    FLOODED = 4,
 };
 
 class Tile {

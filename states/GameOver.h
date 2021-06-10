@@ -9,9 +9,13 @@
 #include <cstdint>
 
 class GameOver {
+private:
+    bool done_;
 public:
     void update(uint32_t time);
     void render(uint32_t time);
+    bool done();
+    void reset();
 };
 
 

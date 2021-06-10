@@ -13,9 +13,12 @@ GameMap::GameMap(int32_t width, int32_t height, int32_t tile_size, int32_t wall_
         tile_start_x = 0;
         for (int x = 0; x < width; x++) {
             int32_t tile_width = (x & 1) == 0 ? wall_size : tile_size;
-            bool collides = !((x & 1) == 1 && (y & 1) == 1);
+            TileType tileType = TileType::FLOOR;
+            if (!((x & 1) == 1 && (y & 1) == 1)) {
+                tileType = TileType::WALL;
+            };
             blit::Rect bounds = blit::Rect(tile_start_x, tile_start_y, tile_width, tile_height);
-            Tile tile = Tile(x, y, bounds, collides);
+            Tile tile = Tile(x, y, bounds, tileType);
             tiles.push_back(tile);
             tile_start_x += tile_width;
         }
@@ -32,21 +35,21 @@ GameMap GameMap::from_maze(Maze *maze, int32_t tile_size, int32_t wall_size, bli
         for (int x  = 0; x < maze->width(); x++) {
             Cell *cell = maze->cell_at(x, y);
             if (cell->open(Direction::NORTH)) {
-                gameMap.tile_at(x * 2 + 1, y * 2)->setCollides(false);
+                gameMap.tile_at(x * 2 + 1, y * 2)->setType(TileType::FLOOR);
             }
 
             // Checking South shouldn't be needed, but we do it anyway.
             if (cell->open(Direction::SOUTH)) {
-                gameMap.tile_at(x * 2 + 1, y * 2 + 2)->setCollides(false);
+                gameMap.tile_at(x * 2 + 1, y * 2 + 2)->setType(TileType::FLOOR);
             }
 
             if (cell->open(Direction::WEST)) {
-                gameMap.tile_at(x * 2, y * 2 + 1)->setCollides(false);
+                gameMap.tile_at(x * 2, y * 2 + 1)->setType(TileType::FLOOR);
             }
 
             // Checking East shouldn't be needed, but we do it anyway.
             if (cell->open(Direction::EAST)) {
-                gameMap.tile_at(x * 2 + 2, y * 2 + 1)->setCollides(false);
+                gameMap.tile_at(x * 2 + 2, y * 2 + 1)->setType(TileType::FLOOR);
             }
         }
     }
@@ -65,13 +68,13 @@ Tile *GameMap::tile_at(int32_t x, int32_t y) {
     return &tiles[y * width_ + x];
 }
 
-bool GameMap::collides(blit::Rect obj) {
-    for (auto tile: tiles) {
+Tile* GameMap::collides(blit::Rect obj) {
+    for (Tile tile: tiles) {
         if (tile.collides() && tile.bounds()->intersects(obj)) {
-            return true;
+            return &tile;
         }
     }
-    return false;
+    return nullptr;
 }
 
 blit::Size GameMap::pixelSize() {

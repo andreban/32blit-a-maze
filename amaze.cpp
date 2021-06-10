@@ -46,6 +46,7 @@ void update(uint32_t time) {
         case GAME:
             game->update(time);
             if (game->gameOver()) {
+                gameOver.reset();
                 gameState = GAME_OVER;
             } else if (game->victory()) {
                 game = Game::newGame();
@@ -53,5 +54,9 @@ void update(uint32_t time) {
             break;
         case GAME_OVER:
             gameOver.update(time);
+            if (gameOver.done()) {
+                mainMenu.reset();
+                gameState = MAIN_MENU;
+            }
     }
 }

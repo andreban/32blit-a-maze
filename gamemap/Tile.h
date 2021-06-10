@@ -7,16 +7,24 @@
 
 #include <types/rect.hpp>
 
+enum TileType {
+    WALL,
+    FLOOR,
+    FLOODING,
+    FLOODED,
+};
+
 class Tile {
 private:
     int32_t x_;
     int32_t y_;
     blit::Rect bounds_ = blit::Rect();
-    bool collides_;
+    TileType tileType_ = FLOOR;
 public:
-    Tile(int32_t x, int32_t y, blit::Rect bounds, bool collides);
+    Tile(int32_t x, int32_t y, blit::Rect bounds, TileType tileType);
     bool collides();
-    void setCollides(bool collides);
+    void setType(TileType tileType);
+    TileType tileType();
     int32_t x();
     int32_t y();
     blit::Rect* bounds();

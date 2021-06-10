@@ -9,7 +9,6 @@ using namespace blit;
 
 void MainMenu::update(uint32_t time) {
     if (pressed(A)) {
-        printf("Ble");
         newGame_ = true;
     }
 }

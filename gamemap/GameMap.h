@@ -23,7 +23,7 @@ public:
     blit::Point exit();
     blit::Size pixelSize();
     Tile* tile_at(int32_t x, int32_t y);
-    bool collides(blit::Rect obj);
+    Tile* collides(blit::Rect obj);
     static GameMap from_maze(Maze *maze, int32_t tile_size, int32_t wall_size, blit::Point exit);
 };
 

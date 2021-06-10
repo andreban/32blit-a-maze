@@ -4,13 +4,13 @@
 
 #include "Tile.h"
 
-Tile::Tile(int32_t x, int32_t y, blit::Rect bounds, bool collides):
-        x_(x), y_(y), bounds_(bounds), collides_(collides) {
+Tile::Tile(int32_t x, int32_t y, blit::Rect bounds, TileType tileType):
+        x_(x), y_(y), bounds_(bounds), tileType_(tileType) {
 
 }
 
 bool Tile::collides() {
-    return collides_;
+    return tileType_ == WALL || tileType_ == FLOODED;
 }
 
 int32_t Tile::x() {
@@ -25,6 +25,10 @@ blit::Rect *Tile::bounds() {
     return &bounds_;
 }
 
-void Tile::setCollides(bool collides) {
-    collides_ = collides;
+TileType Tile::tileType() {
+    return tileType_;
+}
+
+void Tile::setType(TileType tileType) {
+    tileType_ = tileType;
 }

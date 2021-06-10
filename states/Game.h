@@ -17,6 +17,7 @@ private:
     Viewport viewport;
     bool victory_ = false;
     bool gameOver_ = false;
+    uint32_t lastUpdate = 0;
 public:
     Game(GameMap map, Player player, Viewport viewport);
     void update(uint32_t time);

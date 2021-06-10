@@ -1,33 +1,18 @@
-# 32Blit Boilerplate
+# 32Blit A-Maza
 
-![Build](https://github.com/32blit/32blit-boilerplate/workflows/Build/badge.svg)
+![Build](https://github.com/andreban/32blit-a-maze/workflows/Build/badge.svg)
 
-This is a basic template for starting 32blit projects. It shows the basic
-code layout and asset pipeline, hopefully giving folk a starting point for
-any new projects.
+Escape randomly generated mazes in this [32blit](https://32blit.com/) game.
 
-It's based on the original `template` project from the 
-[32Blit Beta](https://github.com/pimoroni/32blit-beta), with added asset
-handling, and some tidying up to fit in with how I do things.
+This is a work in progress, but you can check the current state, in the browser,
+[here](https://andreban.github.io/32blit-a-maze/) or download from 
+[Blithub](https://blithub.co.uk/blits/andreban/a-maze).
 
 ## Usage
 
-[Use this template](https://github.com/32blit/32blit-boilerplate/generate) to
-generate your own project.
-
-* Edit the CMakeList.txt file to set the name of your project
-* Edit the metadata.yml file to set the information for your project
-* Edit the LICENSE file to set your name on the license
-* Write lots of super cool code!
-
-You should then be able to follow the usual build instructions.
-
-For local builds this is:
+For local builds:
 ```
 mkdir build
 cd build
 cmake -D32BLIT_DIR=/path/to/32blit-sdk/ ..
 ```
-
-Platform/Editor specific insctuctions [can be found in the main 32blit repo](https://github.com/pimoroni/32blit-beta#more-docs)
-(For Visual Studio, you should follow the "Option 2" instructions, as the boilerplate does not contain a solution file)

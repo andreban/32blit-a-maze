@@ -30,15 +30,24 @@ void Game::update(uint32_t time) {
         next.y++;
     }
 
-    Tile* collided = map.collides(next);
-    if (collided) {
-        if (collided->tileType() == FLOODED) {
-            gameOver_ = true;
+
+    bool collided = false;
+    for (int y = 0; y < map.height(); y++) {
+        for (int x = 0; x < map.width(); x++) {
+            Tile *tile = map.tile_at(x, y);
+            if (tile->collides() && tile->bounds()->intersects(player.bounds())) {
+                collided = true;
+                if (tile->tileType() == FLOODED) {
+                    gameOver_ = true;
+                }
+            }
         }
-        return;
     }
 
-    player.move(next.x, next.y);
+    if (!collided) {
+        player.move(next.x, next.y);
+    }
+
     Tile *exitTile = map.tile_at(map.exit().x, map.exit().y);
     if (player.bounds().intersects(*exitTile->bounds())){
         victory_ = true;

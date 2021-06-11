@@ -24,5 +24,4 @@ public:
     void link(int32_t x, int32_t y, Direction direction);
 };
 
-
 #endif //GAME_MAZE_H

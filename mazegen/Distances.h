@@ -26,5 +26,4 @@ public:
     static Distances calculate_distances(Maze *maze, blit::Point start_point);
 };
 
-
 #endif //AMAZE_DISTANCES_H

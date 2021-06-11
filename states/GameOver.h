@@ -5,7 +5,6 @@
 #ifndef AMAZE_GAMEOVER_H
 #define AMAZE_GAMEOVER_H
 
-
 #include <cstdint>
 
 class GameOver {
@@ -17,6 +16,5 @@ public:
     bool done();
     void reset();
 };
-
 
 #endif //AMAZE_GAMEOVER_H

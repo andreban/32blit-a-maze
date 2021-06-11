@@ -29,11 +29,12 @@ void Game::update(uint32_t time) {
     if (pressed(DPAD_DOWN)) {
         next.y++;
     }
-    
+
+    blit::Point playerTile = map.worldToTile(player.bounds().center());
     bool collided = false;
-    for (int y = 0; y < map.height(); y++) {
-        for (int x = 0; x < map.width(); x++) {
-            Tile *tile = map.tile_at(x, y);
+    for (int y = playerTile.y - 1; y <= playerTile.y + 1; y++) {
+        for (int x = playerTile.x - 1; x <= playerTile.x + 1; x++) {
+            Tile *tile = map.tileAt(x, y);
             if (tile->collides() && tile->bounds()->intersects(next)) {
                 collided = true;
                 if (tile->tileType() == FLOODED) {
@@ -47,7 +48,7 @@ void Game::update(uint32_t time) {
         player.move(next.x, next.y);
     }
 
-    Tile *exitTile = map.tile_at(map.exit().x, map.exit().y);
+    Tile *exitTile = map.tileAt(map.exit().x, map.exit().y);
     if (player.bounds().intersects(*exitTile->bounds())){
         victory_ = true;
     }
@@ -55,30 +56,7 @@ void Game::update(uint32_t time) {
     if (lastUpdate == 0) {
         lastUpdate = time;
     } else if (time - lastUpdate > TILE_TICK) {
-        // TODO: This is slow! We probably want to keek track of flooding tiles and use that to spread the flood
-        // and then make them flooded.
-        for (int y = 0; y < map.height(); y++) {
-            for (int x = 0; x < map.width(); x++) {
-                Tile *tile = map.tile_at(x, y);
-                if (tile->tileType() == FLOODING) {
-                    tile->setType(FLOODED);
-                }
-            }
-        }
-        for (int y = 0; y < map.height(); y++) {
-            for (int x = 0; x < map.width(); x++) {
-                Tile *tile = map.tile_at(x, y);
-                if (tile->tileType() == FLOODED) {
-                    Direction directions[] = {Direction::NORTH, Direction::SOUTH, Direction::EAST, Direction::WEST};
-                    for (Direction direction: directions) {
-                        Tile *nextTile = map.tile_at(x + vector_x(direction), y + vector_y(direction));
-                        if (nextTile->tileType() == FLOOR) {
-                            nextTile->setType(FLOODING);
-                        }
-                    }
-                }
-            }
-        }
+        map.flood();
         lastUpdate = time;
     }
 }
@@ -91,13 +69,14 @@ void Game::render(uint32_t time) {
 
     viewport.update(player.bounds().center());
 
-    // Render Map
-    for (int y = 0; y < map.height(); y++) {
-        for (int x = 0; x < map.width(); x++) {
-            Tile *tile = map.tile_at(x, y);
+    // TODO: Render only tiles that will actually be on the screen.
+    //   blit::Point playerTile = map.worldToTile(player.bounds().center());
+    for (int y = 0; y < map.size().h; y++) {
+        for (int x = 0; x < map.size().w; x++) {
+            Tile *tile = map.tileAt(x, y);
             if (tile->tileType() == WALL) {
                 screen.pen = Pen(0, 255, 0);
-            } else if (tile-> tileType() == FLOODING) {
+            } else if (map.isFlooding(x, y)) {
                 screen.pen = Pen(10, 10, 100);
             } else if (tile-> tileType() == FLOODED) {
                 screen.pen = Pen(100, 100, 255);
@@ -119,16 +98,16 @@ Game* Game::newGame() {
     Maze maze = binary_tree(20, 15);
     int32_t start_cell_x = rand() % maze.width();
     int32_t start_cell_y = rand() % maze.height();
-    Distances distances = Distances::calculate_distances(&maze, Point(start_cell_x, start_cell_y));
-    Point exit = Point(distances.maxPoint().x * 2 + 1, distances.maxPoint().y * 2 + 1);
-
-    GameMap map = GameMap::from_maze(&maze, 32, 32, exit);
-
     int32_t start_tile_x = start_cell_x * 2 + 1;
     int32_t start_tile_y = start_cell_y * 2 + 1;
 
-    Tile *tile = map.tile_at(start_tile_x, start_tile_y);
-    tile->setType(FLOODING);
+    Distances distances = Distances::calculate_distances(&maze, Point(start_cell_x, start_cell_y));
+    Point start = Point(start_tile_x, start_tile_y);
+    Point exit = Point(distances.maxPoint().x * 2 + 1, distances.maxPoint().y * 2 + 1);
+
+    GameMap map = GameMap::fromMaze(&maze, 32, 32, start, exit);
+
+    Tile *tile = map.tileAt(start_tile_x, start_tile_y);
     int x = tile->bounds()->center().x - 4;
     int y = tile->bounds()->center().y - 4;
     Player player = Player(x, y, 8);

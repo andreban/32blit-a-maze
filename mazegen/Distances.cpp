@@ -79,9 +79,3 @@ blit::Point Distances::maxPoint() {
     }
     return blit::Point(max_x, max_y);
 }
-
-
-
-
-
-

@@ -19,5 +19,4 @@ public:
     blit::Rect translate(blit::Rect rect);
 };
 
-
 #endif //AMAZE_VIEWPORT_H

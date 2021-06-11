@@ -11,20 +11,25 @@
 
 class GameMap {
 private:
-    int32_t width_;
-    int32_t height_;
-    blit::Size pixel_size_;
-    blit::Point exit_;
-    std::vector<Tile> tiles;
+    blit::Size mSize;
+    int32_t mTileSize;
+    int32_t mWallSize;
+    blit::Size mPixelSize;
+    blit::Point mExit;
+    std::vector<Tile> mTiles;
+    std::vector<blit::Point> mFlooding;
+    int32_t tilePos(int32_t x, int32_t y) const;
 public:
-    GameMap(int32_t width, int32_t height, int32_t tile_size, int32_t wall_size, blit::Point exit);
-    int32_t width();
-    int32_t height();
+    GameMap(blit::Size mSize, int32_t tileSize, int32_t wallSize, blit::Point start, blit::Point exit);
+    blit::Size size();
     blit::Point exit();
     blit::Size pixelSize();
-    Tile* tile_at(int32_t x, int32_t y);
-    Tile* collides(blit::Rect obj);
-    static GameMap from_maze(Maze *maze, int32_t tile_size, int32_t wall_size, blit::Point exit);
+    blit::Point worldToTile(blit::Point world);
+    Tile* tileAt(int32_t pos);
+    Tile* tileAt(int32_t x, int32_t y);
+    bool isFlooding(int32_t x, int32_t y);
+    void flood();
+    static GameMap fromMaze(Maze *maze, int32_t tile_size, int32_t wall_size, blit::Point start, blit::Point exit);
 };
 
 #endif //GAME_GAMEMAP_H

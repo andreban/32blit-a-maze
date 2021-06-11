@@ -35,4 +35,3 @@ int32_t vector_y(Direction direction) {
             return -1;
     }
 }
-

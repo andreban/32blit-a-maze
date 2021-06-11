@@ -16,5 +16,4 @@ public:
     void move(int32_t x, int32_t y);
 };
 
-
 #endif //GAME_PLAYER_H

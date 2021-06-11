@@ -28,4 +28,3 @@ Maze binary_tree(int32_t width, int32_t height) {
     }
     return maze;
 }
-

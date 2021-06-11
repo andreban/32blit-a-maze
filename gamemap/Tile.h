@@ -10,7 +10,6 @@
 enum TileType {
     WALL = 1,
     FLOOR = 2,
-    FLOODING = 3,
     FLOODED = 4,
 };
 

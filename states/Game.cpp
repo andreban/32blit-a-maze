@@ -29,13 +29,12 @@ void Game::update(uint32_t time) {
     if (pressed(DPAD_DOWN)) {
         next.y++;
     }
-
-
+    
     bool collided = false;
     for (int y = 0; y < map.height(); y++) {
         for (int x = 0; x < map.width(); x++) {
             Tile *tile = map.tile_at(x, y);
-            if (tile->collides() && tile->bounds()->intersects(player.bounds())) {
+            if (tile->collides() && tile->bounds()->intersects(next)) {
                 collided = true;
                 if (tile->tileType() == FLOODED) {
                     gameOver_ = true;

@@ -4,15 +4,15 @@
 
 #include "Player.h"
 
-Player::Player(int32_t x, int32_t y, int32_t size): bounds_(x, y, size, size) {
+Player::Player(int32_t x, int32_t y, int32_t size): mBounds(x, y, size, size) {
 
 }
 
 blit::Rect Player::bounds() {
-    return bounds_;
+    return mBounds;
 }
 
 void Player::move(int32_t x, int32_t y) {
-    bounds_.x = x;
-    bounds_.y = y;
+    mBounds.x = x;
+    mBounds.y = y;
 }

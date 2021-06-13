@@ -9,7 +9,7 @@ using namespace blit;
 
 void MainMenu::update(uint32_t time) {
     if (pressed(A)) {
-        newGame_ = true;
+        mNewGame = true;
     }
 }
 
@@ -26,9 +26,9 @@ void MainMenu::render(uint32_t time) {
 }
 
 void MainMenu::reset() {
-    newGame_ = false;
+    mNewGame = false;
 }
 
 bool MainMenu::newGame() {
-    return newGame_;
+    return mNewGame;
 }

@@ -9,7 +9,7 @@
 
 class MainMenu {
 private:
-    bool newGame_ = false;
+    bool mNewGame = false;
 public:
     void update(uint32_t time);
     void render(uint32_t time);

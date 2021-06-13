@@ -12,23 +12,23 @@
 
 class Game {
 private:
-    GameMap map;
-    Player player;
-    Viewport viewport;
-    bool victory_ = false;
-    bool gameOver_ = false;
-    uint32_t lastUpdate = 0;
+    GameMap mMap;
+    Player mPlayer;
+    Viewport mViewport;
+    bool mVictory = false;
+    bool mGameOver = false;
+    uint32_t mLastUpdate = 0;
 public:
     Game(GameMap map, Player player, Viewport viewport);
     void update(uint32_t time);
     void render(uint32_t time);
     static Game* newGame();
     bool victory() {
-        return victory_;
+        return mVictory;
     }
 
     bool gameOver() {
-        return gameOver_;
+        return mGameOver;
     }
 };
 

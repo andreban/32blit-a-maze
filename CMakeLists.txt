@@ -20,6 +20,8 @@ set(PROJECT_SOURCE
         gamemap/Tile.cpp
         gamemap/GameMap.cpp
         gamemap/GameMap.h
+        entities/Bomb.h
+        entities/Bomb.cpp
         entities/Player.h
         entities/Player.cpp
         entities/Viewport.h

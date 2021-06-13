@@ -10,9 +10,9 @@
 
 class Viewport {
 private:
-    blit::Size screen_size;
-    blit::Size map_size;
-    blit::Rect viewport;
+    blit::Size mScreenSize;
+    blit::Size mMapSize;
+    blit::Rect mViewport;
 public:
     Viewport(blit::Size screen_size, blit::Size map_size);
     void update(blit::Point center);

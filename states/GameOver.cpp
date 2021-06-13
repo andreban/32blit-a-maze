@@ -9,7 +9,7 @@ using namespace blit;
 
 void GameOver::update(uint32_t time) {
     if (pressed(A)) {
-        done_ = true;
+        mDone = true;
     }
 }
 
@@ -23,9 +23,9 @@ void GameOver::render(uint32_t time) {
 }
 
 bool GameOver::done() {
-    return done_;
+    return mDone;
 }
 
 void GameOver::reset() {
-    done_ = false;
+    mDone = false;
 }

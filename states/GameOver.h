@@ -9,7 +9,7 @@
 
 class GameOver {
 private:
-    bool done_;
+    bool mDone;
 public:
     void update(uint32_t time);
     void render(uint32_t time);

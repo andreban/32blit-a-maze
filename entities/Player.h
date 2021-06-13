@@ -9,7 +9,7 @@
 
 class Player {
 private:
-    blit::Rect bounds_;
+    blit::Rect mBounds;
 public:
     Player(int32_t x, int32_t y, int32_t size);
     blit::Rect bounds();

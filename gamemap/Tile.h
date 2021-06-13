@@ -15,10 +15,10 @@ enum TileType {
 
 class Tile {
 private:
-    int32_t x_;
-    int32_t y_;
-    blit::Rect bounds_ = blit::Rect();
-    TileType tileType_ = FLOOR;
+    int32_t mX;
+    int32_t mY;
+    blit::Rect mBounds_ = blit::Rect();
+    TileType mTileType = FLOOR;
 public:
     Tile(int32_t x, int32_t y, blit::Rect bounds, TileType tileType);
     bool collides();

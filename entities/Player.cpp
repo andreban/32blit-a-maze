@@ -16,3 +16,15 @@ void Player::move(int32_t x, int32_t y) {
     mBounds.x = x;
     mBounds.y = y;
 }
+
+bool Player::useBomb() {
+    if (bombCount() == 0) {
+        return false;
+    }
+    mBombCount--;
+    return true;
+}
+
+uint8_t Player::bombCount() {
+    return mBombCount;
+}

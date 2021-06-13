@@ -9,6 +9,7 @@
 #include "../gamemap/GameMap.h"
 #include "../entities/Player.h"
 #include "../entities/Viewport.h"
+#include "../entities/Bomb.h"
 
 class Game {
 private:
@@ -18,6 +19,8 @@ private:
     bool mVictory = false;
     bool mGameOver = false;
     uint32_t mLastUpdate = 0;
+    std::vector<Bomb> mBombs;
+    void makeFloor(Tile *tile);
 public:
     Game(GameMap map, Player player, Viewport viewport);
     void update(uint32_t time);

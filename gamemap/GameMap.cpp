@@ -81,6 +81,10 @@ int32_t GameMap::tilePos(int32_t x, int32_t y) const {
     return y * mSize.w + x;
 }
 
+void GameMap::setFlooding(int32_t x, int32_t y) {
+    mFlooding.emplace_back(x, y);
+}
+
 bool GameMap::isFlooding(int32_t x, int32_t y) {
     return std::find(mFlooding.begin(), mFlooding.end(), blit::Point(x, y)) != mFlooding.end();
 }

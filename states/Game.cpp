@@ -59,6 +59,29 @@ void Game::update(uint32_t time) {
         mMap.flood();
         mLastUpdate = time;
     }
+
+    auto it = mBombs.begin();
+    while (it < mBombs.end()) {
+        it->tick(time);
+        if (it->exploded()) {
+            blit::Point bombTile = mMap.worldToTile(it->bounds().center());
+            for (int y = bombTile.y - 1; y <= bombTile.y + 1; y++) {
+                for (int x = bombTile.x - 1; x <= bombTile.x + 1; x++) {
+                    Tile *tile = mMap.tileAt(x, y);
+                    if (tile->tileType() == WALL && tile->bounds()->intersects(it->blastBounds())) {
+                        makeFloor(tile);
+                    }
+                }
+            }
+            it = mBombs.erase(it);
+        } else {
+            it++;
+        }
+    }
+
+    if ((buttons.pressed & A) && mPlayer.useBomb()) {
+        mBombs.emplace_back(mPlayer.bounds(), time);
+    }
 }
 
 void Game::render(uint32_t time) {
@@ -89,6 +112,15 @@ void Game::render(uint32_t time) {
         }
     }
 
+    screen.pen = Pen(255, 0, 255);
+    for (auto bomb: mBombs) {
+        screen.pen = Pen(255, 0, 255);
+        screen.rectangle(mViewport.translate(bomb.bounds()));
+
+        screen.pen = Pen(255, 0, 255, 120);
+        screen.rectangle(mViewport.translate(bomb.blastBounds()));
+    }
+
     // Render Player
     screen.pen = Pen(255, 0, 0);
     screen.rectangle(mViewport.translate(mPlayer.bounds()));
@@ -113,4 +145,22 @@ Game* Game::newGame() {
     Player player = Player(x, y, 8);
     Viewport viewport = Viewport(screen.bounds, map.pixelSize());
     return new Game(map, player, viewport);
+}
+
+void Game::makeFloor(Tile *tile) {
+    if (tile->tileType() != WALL ||
+            tile->y() == 0 || tile->y() == mMap.size().h - 1 ||
+            tile->x() == 0 || tile->x() == mMap.size().w - 1) {
+        return;
+    }
+    tile->setType(FLOOR);
+    for (int y = tile->y() - 1; y <= tile->y() + 1; y++) {
+        for (int x = tile->x() - 1; x <= tile->x() + 1; x++) {
+            Tile *nextTile = mMap.tileAt(x, y);
+            if (nextTile->tileType() == FLOODED) {
+                mMap.setFlooding(tile->x(), tile->y());
+                return;
+            }
+        }
+    }
 }

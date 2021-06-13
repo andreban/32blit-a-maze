@@ -27,6 +27,7 @@ public:
     blit::Point worldToTile(blit::Point world);
     Tile* tileAt(int32_t pos);
     Tile* tileAt(int32_t x, int32_t y);
+    void setFlooding(int32_t x, int32_t y);
     bool isFlooding(int32_t x, int32_t y);
     void flood();
     static GameMap fromMaze(Maze *maze, int32_t tile_size, int32_t wall_size, blit::Point start, blit::Point exit);

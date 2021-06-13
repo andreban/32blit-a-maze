@@ -8,7 +8,7 @@
 using namespace blit;
 
 void GameOver::update(uint32_t time) {
-    if (pressed(A)) {
+    if (buttons.pressed & A) {
         mDone = true;
     }
 }

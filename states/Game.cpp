@@ -5,15 +5,16 @@
 #include "Game.h"
 #include "../mazegen/MazeGen.h"
 #include "../mazegen/Distances.h"
+#include "assets.hpp"
 
 #include <utility>
 using namespace blit;
 
 const uint32_t TILE_TICK = 1000;
-const uint32_t SPEED = 2;
+const uint32_t SPEED = 1;
 
 Game::Game(GameMap map, Player player, Viewport viewport): mMap(std::move(map)), mPlayer(player), mViewport(viewport) {
-
+    tiles = Surface::load(tileset);
 }
 
 void Game::update(uint32_t time) {
@@ -91,29 +92,31 @@ void Game::render(uint32_t time) {
         for (int x = 0; x < mMap.size().w; x++) {
             Tile *tile = mMap.tileAt(x, y);
             if (tile->tileType() == WALL) {
-                screen.pen = Pen(0, 255, 0);
+                screen.stretch_blit(this-> tiles, this->wall, mViewport.translate(*tile->bounds()));
             } else if (mMap.isFlooding(x, y)) {
-                screen.pen = Pen(10, 10, 100);
+                screen.stretch_blit(this-> tiles, this->flooding, mViewport.translate(*tile->bounds()));
             } else if (tile-> tileType() == FLOODED) {
-                screen.pen = Pen(100, 100, 255);
-            } else if (mMap.exit().x == x && mMap.exit().y == y){
-                screen.pen = Pen(255, 0, 0);
+                screen.stretch_blit(this-> tiles, this->flooded, mViewport.translate(*tile->bounds()));
             } else {
                 screen.pen = Pen(0, 0, 0);
+                screen.rectangle(mViewport.translate(*tile->bounds()));
             }
-            screen.rectangle(mViewport.translate(*tile->bounds()));
+
+            if (mMap.exit().x == x && mMap.exit().y == y){
+                screen.stretch_blit(this->tiles, this->exit, mViewport.translate(*tile->bounds()));
+            }
         }
     }
 
     // Render bombs
-    screen.pen = Pen(255, 0, 255);
     for (auto bomb: mBombs) {
-        screen.rectangle(mViewport.translate(bomb.bounds()));
+        screen.stretch_blit(this->tiles, this->bomb, mViewport.translate(bomb.bounds()));
     }
 
     // Render Player
     screen.pen = Pen(255, 0, 0);
-    screen.rectangle(mViewport.translate(mPlayer.bounds()));
+    screen.circle(mViewport.translate(mPlayer.bounds()).center(), mPlayer.bounds().w / 2);
+//    screen.rectangle(mViewport.translate(mPlayer.bounds()));
 }
 
 Game* Game::newGame() {

@@ -10,7 +10,7 @@ Tile::Tile(int32_t x, int32_t y, blit::Rect bounds, TileType tileType):
 }
 
 bool Tile::collides() {
-    return mTileType == WALL || mTileType == FLOODED;
+    return mTileType == WALL;
 }
 
 int32_t Tile::x() {

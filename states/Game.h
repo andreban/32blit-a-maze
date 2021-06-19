@@ -25,6 +25,8 @@ public:
     Game(GameMap map, Player player, Viewport viewport);
     void update(uint32_t time);
     void render(uint32_t time);
+    blit::Rect tryMove(blit::Point amount);
+    Tile* canMove(blit::Rect next);
     static Game* newGame();
     bool victory() {
         return mVictory;

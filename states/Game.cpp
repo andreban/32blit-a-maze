@@ -10,42 +10,34 @@
 using namespace blit;
 
 const uint32_t TILE_TICK = 1000;
+const uint32_t SPEED = 2;
 
 Game::Game(GameMap map, Player player, Viewport viewport): mMap(std::move(map)), mPlayer(player), mViewport(viewport) {
 
 }
 
 void Game::update(uint32_t time) {
-    blit::Rect next = blit::Rect(mPlayer.bounds().tl(), mPlayer.bounds().br());
+    Point moveAmount = Point(0, 0);
     if (pressed(DPAD_RIGHT)) {
-        next.x++;
+        moveAmount.x+= SPEED;
     }
     if (pressed(DPAD_LEFT)) {
-        next.x--;
+        moveAmount.x-= SPEED;
     }
+
     if (pressed(DPAD_UP)) {
-        next.y--;
+        moveAmount.y-=SPEED;
     }
     if (pressed(DPAD_DOWN)) {
-        next.y++;
+        moveAmount.y+=SPEED;
     }
 
-    blit::Point playerTile = mMap.worldToTile(mPlayer.bounds().center());
-    bool collided = false;
-    for (int y = playerTile.y - 1; y <= playerTile.y + 1; y++) {
-        for (int x = playerTile.x - 1; x <= playerTile.x + 1; x++) {
-            Tile *tile = mMap.tileAt(x, y);
-            if (tile->collides() && tile->bounds()->intersects(next)) {
-                collided = true;
-                if (tile->tileType() == FLOODED) {
-                    mGameOver = true;
-                }
-            }
-        }
-    }
+    Rect movedPos = tryMove(moveAmount);
+    mPlayer.move(movedPos.x, movedPos.y);
 
-    if (!collided) {
-        mPlayer.move(next.x, next.y);
+    Point playerTile = mMap.worldToTile(mPlayer.bounds().center());
+    if (mMap.tileAt(playerTile.x, playerTile.y)->tileType() == FLOODED) {
+        mGameOver = true;
     }
 
     Tile *exitTile = mMap.tileAt(mMap.exit().x, mMap.exit().y);
@@ -92,6 +84,7 @@ void Game::render(uint32_t time) {
 
     mViewport.update(mPlayer.bounds().center());
 
+    // Render Walls
     // TODO: Render only tiles that will actually be on the screen.
     //   blit::Point playerTile = mMap.worldToTile(mPlayer.bounds().center());
     for (int y = 0; y < mMap.size().h; y++) {
@@ -112,13 +105,10 @@ void Game::render(uint32_t time) {
         }
     }
 
+    // Render bombs
     screen.pen = Pen(255, 0, 255);
     for (auto bomb: mBombs) {
-        screen.pen = Pen(255, 0, 255);
         screen.rectangle(mViewport.translate(bomb.bounds()));
-
-        screen.pen = Pen(255, 0, 255, 120);
-        screen.rectangle(mViewport.translate(bomb.blastBounds()));
     }
 
     // Render Player
@@ -163,4 +153,52 @@ void Game::makeFloor(Tile *tile) {
             }
         }
     }
+}
+
+Tile* Game::canMove(blit::Rect next) {
+    blit::Point playerTile = mMap.worldToTile(next.center());
+    for (int y = playerTile.y - 1; y <= playerTile.y + 1; y++) {
+        for (int x = playerTile.x - 1; x <= playerTile.x + 1; x++) {
+            Tile *tile = mMap.tileAt(x, y);
+            if (tile->collides() && tile->bounds()->intersects(next)) {
+                return tile;
+            }
+        }
+    }
+    return nullptr;
+}
+
+blit::Rect Game::tryMove(blit::Point amount) {
+    Rect next = mPlayer.bounds();
+
+    // Try moving along the X axis.
+    Rect nextX = blit::Rect(next.x + amount.x, next.y, next.w, next.h);
+    Tile* collided = canMove(nextX);
+
+    // If collided, check how much we can move along X.
+    if (collided != nullptr) {
+        if (amount.x > 0) {
+            next.x = collided->bounds()->x - next.w - 1;
+        } else {
+            next.x = collided->bounds()->x + collided->bounds()->w + 1;
+        }
+    } else {
+        next.x = nextX.x;
+    }
+
+    // Try moving along the Y axis.
+    Rect nextY = blit::Rect(next.x, next.y + amount.y, next.w, next.h);
+    collided = canMove(nextY);
+    // If collided, check how much we can move along Y.
+    if (collided != nullptr) {
+        if (amount.y > 0) {
+            next.y = collided->bounds()->y - next.h - 1;
+        } else {
+            next.y = collided->bounds()->y + collided->bounds()->h + 1;
+        }
+    } else {
+        next.y = nextY.y;
+    }
+
+    return next;
 }
